@@ -17,3 +17,15 @@ INFLUXDB_TOKEN=xxxxxxxx
 ```
 docker compose up -d
 ```
+
+## Add records 
+
+```
+python3 Task1/src/main.py 0
+```
+
+## Delete all data 
+
+```
+python3 Task1/src/main.py -1
+```
