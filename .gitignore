@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+Task1/influxdb_data/
+Task1/.env
+.DS_Store
