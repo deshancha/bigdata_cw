@@ -10,6 +10,11 @@ class IClimateRepository(ABC):
         pass
 
     @abstractmethod
+    def delete_all_data(self) -> None:
+        """clear all data"""
+        pass
+
+    @abstractmethod
     def close(self) -> None:
         """close connection"""
         pass
