@@ -1,0 +1,26 @@
+version: '3.8'
+
+networks:
+  network-label:
+    name: task2-network
+    driver: bridge
+
+services:
+
+  # Master for delegate heavy work to worker containers
+  jobmanager-label:
+    networks:
+      - network-label
+    build:
+      context: .
+      args:
+        - FLINK_VERSION=${FLINK_VERSION}
+    container_name: task2-jobmanager
+    ports:
+      - "${FLINK_PORT}:${FLINK_PORT}"
+    # start up in master mode  
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager-label
