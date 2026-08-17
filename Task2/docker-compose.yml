@@ -24,3 +24,23 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager-label
+
+
+  # Flink TaskManager - worker for computations
+  taskmanager-label:
+    networks:
+      - network-label
+    build:
+      context: .
+      args:
+        - FLINK_VERSION=${FLINK_VERSION}
+    container_name: task2-taskmanager
+    depends_on:
+      - jobmanager-label
+    command: taskmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager-label
+        taskmanager.numberOfTaskSlots: ${FLINK_TASK_SLOTS}
+
