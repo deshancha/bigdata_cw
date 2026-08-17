@@ -221,3 +221,4 @@ Task1/influxdb_data/
 Task1/.env
 .DS_Store
 Task1/Local
+Task2/Local

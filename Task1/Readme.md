@@ -18,14 +18,25 @@ INFLUXDB_TOKEN=xxxxxxxx
 docker compose up -d
 ```
 
-## Add records 
+## source 
+```
+source .venv/bin/activate
+```
+
+## Drop all
+
+```
+python3 Task1/src/main.py -1
+```
+
+## create 
 
 ```
 python3 Task1/src/main.py 0
 ```
 
-## Delete all data 
+## add all (1000 pertime) 
 
 ```
-python3 Task1/src/main.py -1
+python3 Task1/src/main.py 0
 ```
