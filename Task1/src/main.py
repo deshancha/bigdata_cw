@@ -22,9 +22,14 @@ def main():
     open_usecase.execute()
 
     if arg == "-1":
-        clear_usecase = container.clear_data_usecase()
-        clear_usecase.execute()
+        drop_usecase = container.drop_bucket_usecase()
+        drop_usecase.execute()
+
     elif arg == "0":
+        create_usecase = container.create_bucket_usecase()
+        create_usecase.execute()
+
+    elif arg == "1":
         csv_file_path = os.path.abspath(
             os.path.join(src_dir, "..", "Local", "fairbanks_climate_full.csv")
         )

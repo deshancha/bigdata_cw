@@ -57,14 +57,40 @@ class InfluxDbClimateRepositoryImp(IClimateRepository):
         if points:
             try:
                 self.write_api.write(bucket=self.bucket, org=self.org, record=points)
-                self.logger.info(f"Successfully wrote {len(points)} points to InfluxDB.")
+                self.logger.info(f"Ok wrote {len(points)} points to InfluxDB.")
             except Exception as e:
                 self.logger.error(f"Error writing batch: {str(e)}")
 
-    def delete_all_data(self) -> None:
-        self.logger.info(f"Clear bucket '{self.bucket}'")
-        
+    def drop_bucket(self) -> None:
+        self.logger.info(f"Dropping Influxdb bucket: '{self.bucket}'")
+        try:
+            buckets_api = self.client.buckets_api()
+            bucket_obj = buckets_api.find_bucket_by_name(self.bucket)
+            if bucket_obj:
+                buckets_api.delete_bucket(bucket_obj.id)
+                self.logger.info(f"Ok dropped bucket: '{self.bucket}'.")
+            else:
+                self.logger.warn(f"Bucket :'{self.bucket}' not exist")
+        except Exception as e:
+            self.logger.error(f"Failed to drop bucket :'{self.bucket}': {str(e)}")
+
+    def create_bucket(self) -> None:
+        self.logger.info(f"Creating Influx bucket: '{self.bucket}'")
+        try:
+            buckets_api = self.client.buckets_api()
+            
+            org_api = self.client.organizations_api()
+            orgs = org_api.find_organizations(org=self.org)
+            if orgs:
+                org_id = orgs[0].id
+                buckets_api.create_bucket(bucket_name=self.bucket, org_id=org_id)
+                self.logger.info(f"Ok created bucket '{self.bucket}'.")
+            else:
+                buckets_api.create_bucket(bucket_name=self.bucket, org=self.org)
+                self.logger.info(f"Ok created bucket: '{self.bucket}' using org name.")
+        except Exception as e:
+            self.logger.error(f"Failed to create bucket '{self.bucket}': {str(e)}")
 
     def close(self) -> None:
-        self.logger.info("Closing InfluxDB client connection.")
+        self.logger.info("Closing Influx client connection.")
         self.client.close()

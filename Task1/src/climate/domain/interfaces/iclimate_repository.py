@@ -15,8 +15,13 @@ class IClimateRepository(ABC):
         pass
 
     @abstractmethod
-    def delete_all_data(self) -> None:
-        """clear all data"""
+    def drop_bucket(self) -> None:
+        """drop bucket"""
+        pass
+
+    @abstractmethod
+    def create_bucket(self) -> None:
+        """create bucket"""
         pass
 
     @abstractmethod
