@@ -67,3 +67,14 @@ services:
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
 
 
+  # Kafka Web UI
+  kafka-ui-label:
+    image: kafbat/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "${KAFKA_UI_PORT}:${KAFKA_UI_PORT}"
+    networks:
+      - network-label
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-kraft-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-label:9092
