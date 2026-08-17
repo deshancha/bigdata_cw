@@ -18,6 +18,9 @@ def main():
     logger = container.logger()
     logger.info(f"influx work starting with mode: {arg}")
 
+    open_usecase = container.open_connection_usecase()
+    open_usecase.execute()
+
     if arg == "-1":
         clear_usecase = container.clear_data_usecase()
         clear_usecase.execute()

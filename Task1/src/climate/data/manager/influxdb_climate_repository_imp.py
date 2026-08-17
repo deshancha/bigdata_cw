@@ -18,9 +18,11 @@ class InfluxDbClimateRepositoryImp(IClimateRepository):
         self.bucket = os.environ.get("INFLUXDB_BUCKET")
         self.url = f"http://localhost:{self.port}"
         
-        self.logger.info(f"Init influx connection with: {self.url}, org: '{self.org}', bucket: '{self.bucket}'")
-        
-        # client
+        self.client = None
+        self.write_api = None
+
+    def open(self) -> None:
+        self.logger.info(f"Opening influx connection with: {self.url}, org: '{self.org}', bucket: '{self.bucket}'")
         self.client = InfluxDBClient(url=self.url, token=self.token, org=self.org, timeout=30000)
         self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
 
