@@ -24,14 +24,18 @@ def main():
     if arg == "-1":
         drop_usecase = container.drop_bucket_usecase()
         drop_usecase.execute()
-
     elif arg == "0":
         create_usecase = container.create_bucket_usecase()
         create_usecase.execute()
-
     elif arg == "1":
         csv_file_path = os.path.abspath(
-            os.path.join(src_dir, "..", "Local", "fairbanks_climate_full.csv")
+            os.path.join(src_dir, "..", "Data", "weatherHistory.csv")
+        )
+        load_usecase = container.load_data_usecase()
+        load_usecase.execute(csv_file_path=csv_file_path)
+    elif arg == "2":
+        csv_file_path = os.path.abspath(
+            os.path.join(src_dir, "..", "Data", "Project 1 - Weather Dataset.csv")
         )
         load_usecase = container.load_data_usecase()
         load_usecase.execute(csv_file_path=csv_file_path)
