@@ -222,3 +222,6 @@ Task1/.env
 .DS_Store
 Task1/Local
 Task2/Local
+
+# Gradle build cache
+.gradle/
