@@ -225,3 +225,4 @@ Task2/Local
 
 # Gradle build cache
 .gradle/
+.vscode
