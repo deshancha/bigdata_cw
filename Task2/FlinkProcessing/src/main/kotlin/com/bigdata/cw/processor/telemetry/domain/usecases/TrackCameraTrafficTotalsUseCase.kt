@@ -62,8 +62,8 @@ class TrackCameraTrafficTotalsUseCase(
 
         watermarkedStream
             .keyBy { it.camId }
-            // 10 min window
-            .window(TumblingEventTimeWindows.of(Time.minutes(10)))
+            // 10 min window, seconds for easy monitoring
+            .window(TumblingEventTimeWindows.of(Time.seconds(10)))
             .process(object : ProcessWindowFunction<TelemetryRecord, String, String, TimeWindow>() {
                 override fun process(
                     key: String,
