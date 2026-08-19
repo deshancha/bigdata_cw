@@ -80,6 +80,7 @@ class TrackCameraTrafficTotalsUseCase(
                     """)
                 }
             })
+            .print()
 
         repository.doJob(env, "Cam Traffic 10 Min Summary")
     }
