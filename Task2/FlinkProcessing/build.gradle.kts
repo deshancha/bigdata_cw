@@ -30,3 +30,19 @@ tasks.shadowJar {
     // need by flink -> Service providr interfaces resolving
     mergeServiceFiles()
 }
+
+// Helper to Deploy to Docker (Lib + .env)
+tasks.register<Exec>("deployToDocker") {
+    dependsOn("shadowJar")
+    group = "deployment"
+    description = "Copy jar and .env to Flink JobManager"
+
+    commandLine("docker", "cp", "${tasks.shadowJar.get().archiveFile.get().asFile.absolutePath}", "task2-jobmanager:/opt/flink/")
+
+    doLast {
+        ProcessBuilder("docker", "cp", "${projectDir}/../.env", "task2-jobmanager:/opt/flink/")
+            .inheritIO()
+            .start()
+            .waitFor()
+    }
+}
