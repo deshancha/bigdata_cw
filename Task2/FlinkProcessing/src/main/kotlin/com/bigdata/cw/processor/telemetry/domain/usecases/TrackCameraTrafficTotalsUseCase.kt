@@ -72,10 +72,12 @@ class TrackCameraTrafficTotalsUseCase(
                     out: Collector<String>
                 ) {
                     val totalVehicles = elements.sumOf { it.vehCount }
+                    val eventTimestamp = elements.firstOrNull()?.timeStamp ?: context.window().start
                     out.collect(
                         """
                         {
                           "cam_id": "$key",
+                          "window_start": $eventTimestamp,
                           "vehicle_count": $totalVehicles
                         }
                     """

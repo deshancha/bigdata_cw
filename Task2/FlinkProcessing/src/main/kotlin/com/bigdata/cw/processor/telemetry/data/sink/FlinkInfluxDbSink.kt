@@ -21,7 +21,7 @@ class FlinkInfluxDbSink : RichSinkFunction<String>() {
     override fun open(parameters: Configuration) {
         val dotenv = Dotenv.configure().ignoreIfMissing().load()
         val url = dotenv.get("INFLUXDB_URL", "http://influxdb-label:8086")
-        val token = dotenv.get("INFLUXDB_TOKEN", "my-super-secret-admin-token")
+        val token = dotenv.get("INFLUXDB_TOKEN", "api-token")
         val org = dotenv.get("INFLUXDB_ORG", "bigdata_cw")
         val bucket = dotenv.get("INFLUXDB_BUCKET", "traffic_data")
 
@@ -34,11 +34,12 @@ class FlinkInfluxDbSink : RichSinkFunction<String>() {
             val json = Gson().fromJson(value, JsonObject::class.java)
             val camId = json.get("cam_id")?.asString ?: "unknown"
             val count = json.get("vehicle_count")?.asInt ?: 0
+            val windowStart = json.get("original_start")?.asLong ?: System.currentTimeMillis()
 
             val point = Point.measurement("camera_traffic")
                 .addTag("cam_id", camId)
                 .addField("vehicle_count", count)
-                .time(Instant.now(), WritePrecision.MS)
+                .time(Instant.ofEpochMilli(windowStart), WritePrecision.MS)
 
             client?.writeApiBlocking?.writePoint(point)
         } catch (e: Exception) {
