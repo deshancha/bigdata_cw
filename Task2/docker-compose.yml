@@ -82,3 +82,19 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local-kraft-cluster
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-label:9092
+
+  # InfluxDB time-series storage
+  influxdb-label:
+    image: influxdb:2.7
+    container_name: task2-influxdb
+    ports:
+      - "8087:8086"
+    networks:
+      - network-label
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
