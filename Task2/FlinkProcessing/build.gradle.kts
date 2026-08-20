@@ -41,12 +41,6 @@ tasks.register<Exec>("deployToDocker") {
     commandLine("docker", "cp", "${tasks.shadowJar.get().archiveFile.get().asFile.absolutePath}", "task2-jobmanager:/opt/flink/")
 
     doLast {
-        // .env copy
-        ProcessBuilder("docker", "cp", "${projectDir}/../.env", "task2-jobmanager:/opt/flink/")
-            .inheritIO()
-            .start()
-            .waitFor()
-
         // Flink job submit
         val jarName = tasks.shadowJar.get().archiveFile.get().asFile.name
         ProcessBuilder(

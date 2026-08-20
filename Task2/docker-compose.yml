@@ -20,6 +20,8 @@ services:
       - "${FLINK_PORT}:${FLINK_PORT}"
     # start up in master mode  
     command: jobmanager
+    volumes:
+      - ./.env:/opt/flink/.env
     environment:
       - |
         FLINK_PROPERTIES=
@@ -38,6 +40,8 @@ services:
     depends_on:
       - jobmanager-label
     command: taskmanager
+    volumes:
+      - ./.env:/opt/flink/.env
     environment:
       - |
         FLINK_PROPERTIES=
