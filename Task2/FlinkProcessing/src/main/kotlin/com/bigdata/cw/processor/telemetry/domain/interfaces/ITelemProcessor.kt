@@ -9,5 +9,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 interface ITelemProcessor {
     fun getEnvironment(): StreamExecutionEnvironment
     fun readKafka(env: StreamExecutionEnvironment, topic: String): DataStream<String>
+    fun writeSink(stream: DataStream<String>)
     fun doJob(env: StreamExecutionEnvironment, jobName: String)
 }

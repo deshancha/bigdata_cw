@@ -5,6 +5,7 @@ package com.bigdata.cw.processor.telemetry.data.manager
 
 import com.bigdata.cw.processor.core.util.ILogger
 import com.bigdata.cw.processor.telemetry.domain.interfaces.ITelemProcessor
+import com.bigdata.cw.processor.telemetry.data.sink.FlinkInfluxDbSink
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.connector.kafka.source.KafkaSource
@@ -36,6 +37,11 @@ class FlinkTelemetryProcessorStreamApiImp(private val logger: ILogger) : ITelemP
         // Watermark Strategy -> How to measure the progress of time and we skip it.
         // Due to possible delays of data come we handle this using timestamp value in data
         return env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Telemetry Src - KaFka")
+    }
+
+    override fun writeSink(stream: DataStream<String>) {
+        logger.info("Regisyer FLink Sink")
+        stream.addSink(FlinkInfluxDbSink())
     }
 
     override fun doJob(env: StreamExecutionEnvironment, jobName: String) {

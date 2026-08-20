@@ -42,15 +42,15 @@ class TrackCameraTrafficTotalsUseCase(
                         .atZone(ZoneId.of("UTC"))
                         .toInstant()
                         .toEpochMilli()
-                    
+
                     out.collect(TelemetryRecord(camId, timeStamp, vehCount))
                 }
             } catch (e: Exception) {
                 // Ignore and parsedStream = 0 
             }
         }
-        // Flink need to class type, or cannot find serializer 
-        .returns(TelemetryRecord::class.java)
+            // Flink need to class type, or cannot find serializer 
+            .returns(TelemetryRecord::class.java)
 
         val watermarkStrategy = WatermarkStrategy
             // 10 sec delay allow
@@ -60,10 +60,10 @@ class TrackCameraTrafficTotalsUseCase(
 
         val watermarkedStream = parsedStream.assignTimestampsAndWatermarks(watermarkStrategy)
 
-        watermarkedStream
+        val summingUp = watermarkedStream
             .keyBy { it.camId }
             // 10 min window, seconds for easy monitoring
-            .window(TumblingEventTimeWindows.of(Time.seconds(10)))
+            .window(TumblingEventTimeWindows.of(Time.minutes(10)))
             .process(object : ProcessWindowFunction<TelemetryRecord, String, String, TimeWindow>() {
                 override fun process(
                     key: String,
@@ -72,15 +72,22 @@ class TrackCameraTrafficTotalsUseCase(
                     out: Collector<String>
                 ) {
                     val totalVehicles = elements.sumOf { it.vehCount }
-                    out.collect("""
+                    out.collect(
+                        """
                         {
                           "cam_id": "$key",
                           "vehicle_count": $totalVehicles
                         }
-                    """)
+                    """
+                    )
                 }
             })
-            .print()
+
+        // print
+        summingUp.print()
+
+        // export data
+        repository.writeSink(summingUp)
 
         repository.doJob(env, "Cam Traffic 10 Min Summary")
     }

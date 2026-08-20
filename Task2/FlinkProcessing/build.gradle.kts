@@ -23,6 +23,7 @@ dependencies {
     implementation("org.apache.flink:flink-connector-kafka:3.0.1-1.18")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.github.cdimascio:dotenv-java:3.0.0")
+    implementation("com.influxdb:influxdb-client-java:6.12.0")
 }
 
 tasks.shadowJar {
