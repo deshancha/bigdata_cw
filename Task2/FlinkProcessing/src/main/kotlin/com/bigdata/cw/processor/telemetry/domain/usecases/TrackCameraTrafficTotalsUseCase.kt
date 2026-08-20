@@ -77,7 +77,7 @@ class TrackCameraTrafficTotalsUseCase(
                         """
                         {
                           "cam_id": "$key",
-                          "window_start": $eventTimestamp,
+                          "original_start": $eventTimestamp,
                           "vehicle_count": $totalVehicles
                         }
                     """

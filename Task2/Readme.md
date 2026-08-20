@@ -25,6 +25,7 @@ LOG_ENABLED=1
 - Flink UI - http://localhost:8080
 
 ```
+docker compose up -v
 docker compose up -d
 ```
 
@@ -46,4 +47,10 @@ gradle deployToDocker
 
 ```
 docker logs task2-taskmanager > taskmanager_output.log
+```
+
+
+## drop traffic data in influx db 
+```
+docker exec task2-influxdb influx delete --bucket traffic_data --start 2019-01-01T00:00:00Z --stop 2029-01-01T00:00:00Z --token api-token --org bigdata_cw
 ```
