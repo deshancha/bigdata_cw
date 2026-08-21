@@ -12,10 +12,11 @@ import com.google.gson.JsonObject
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
+import com.bigdata.cw.processor.core.util.ILogger
 import io.github.cdimascio.dotenv.Dotenv
 import java.time.Instant
 
-class FlinkInfluxDbSink : RichSinkFunction<String>() {
+class FlinkInfluxDbSink(private val logger: ILogger) : RichSinkFunction<String>() {
     private var client: InfluxDBClient? = null
 
     override fun open(parameters: Configuration) {
@@ -31,7 +32,6 @@ class FlinkInfluxDbSink : RichSinkFunction<String>() {
     }
 
     override fun invoke(value: String, context: SinkFunction.Context) {
-        val taskLogger = org.slf4j.LoggerFactory.getLogger("InfluxDbSink")
         try {
             val json = Gson().fromJson(value, JsonObject::class.java)
             val camId = json.get("cam_id")?.asString ?: "unknown"
@@ -45,7 +45,8 @@ class FlinkInfluxDbSink : RichSinkFunction<String>() {
 
             client?.writeApiBlocking?.writePoint(point)
         } catch (e: Exception) {
-            taskLogger.error("Fail to Write InfluxDB: ${e.message}", e)
+            logger.error("Fail to Write InfluxDB: ${e.message}")
+            e.printStackTrace()
         }
     }
 

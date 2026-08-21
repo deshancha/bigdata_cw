@@ -3,9 +3,7 @@
 
 package com.bigdata.cw.processor
 
-import com.bigdata.cw.processor.core.util.ConsoleLogger
-import com.bigdata.cw.processor.telemetry.data.manager.FlinkTelemetryProcessorStreamApiImp
-import com.bigdata.cw.processor.telemetry.domain.usecases.TrackCameraTrafficTotalsUseCase
+import com.bigdata.cw.processor.di.DiModule
 import io.github.cdimascio.dotenv.Dotenv
 
 class TelemetryProcessorApp {
@@ -15,16 +13,12 @@ class TelemetryProcessorApp {
             val dotenv = Dotenv.configure().ignoreIfMissing().load()
             val topic = dotenv.get("KAFKA_TOPIC", "traffic-telemetry")
 
-            // Good to have a DI framework here when scaling up.
-
-            val logger = ConsoleLogger("Tsk2_Flink")
+            val logger = DiModule.getLogger()
             logger.info("Start Tele3metry Processor")
             // TODO: sink, database or opentelemtry(Newrelic) later
             // Ie - Avatarin -> Robot status -> disconnect measure with opentelemetry(Newrelic)
-            
-            val repository = FlinkTelemetryProcessorStreamApiImp(logger)
 
-            val usecase = TrackCameraTrafficTotalsUseCase(repository, logger)
+            val usecase = DiModule.createTrackCameraTrafficTotalsUseCase()
 
             usecase.execute(topic)
         }
