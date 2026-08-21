@@ -20,7 +20,9 @@ class FlinkInfluxDbSink : RichSinkFunction<String>() {
 
     override fun open(parameters: Configuration) {
         val dotenv = Dotenv.configure().ignoreIfMissing().load()
-        val url = dotenv.get("INFLUXDB_URL", "http://influxdb-label:8086")
+        val host = dotenv.get("INFLUXDB_DOCKER_HOST", "influxdb-label")
+        val port = dotenv.get("INFLUXDB_INTERNAL_PORT", "8086")
+        val url = "http://$host:$port"
         val token = dotenv.get("INFLUXDB_TOKEN", "api-token")
         val org = dotenv.get("INFLUXDB_ORG", "bigdata_cw")
         val bucket = dotenv.get("INFLUXDB_BUCKET", "traffic_data")

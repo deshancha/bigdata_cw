@@ -226,3 +226,4 @@ Task2/Local
 # Gradle build cache
 .gradle/
 .vscode
+Task2/influxdb_data
