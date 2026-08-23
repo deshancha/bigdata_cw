@@ -1,0 +1,49 @@
+version: '3.8'
+
+networks:
+  spark-network:
+    name: task3-spark-network
+    driver: bridge
+
+# worker template
+x-worker-template: &worker-template
+  image: ${SPARK_IMAGE}
+  command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:${SPARK_MASTER_PORT}
+  environment:
+    - SPARK_NO_DAEMONIZE=true
+    - SPARK_WORKER_CORES=${SPARK_WORKER_CORES}
+    - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY}
+  depends_on:
+    - spark-master
+  volumes:
+    - ${DOCKERDIR}:/opt/spark/work-dir/data
+    - ${SRCDIR}:/opt/spark/work-dir/src
+    - ${DIDIR}:/opt/spark/work-dir/di
+  networks:
+    - spark-network
+
+services:
+  spark-master:
+    image: ${SPARK_IMAGE}
+    container_name: spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    environment:
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_NO_DAEMONIZE=true
+    ports:
+      - "${SPARK_MASTER_UI_PORT}:${SPARK_MASTER_UI_PORT}"
+      - "${SPARK_MASTER_PORT}:${SPARK_MASTER_PORT}"
+    volumes:
+      - ${DOCKERDIR}:/opt/spark/work-dir/data
+      - ${SRCDIR}:/opt/spark/work-dir/src
+      - ${DIDIR}:/opt/spark/work-dir/di
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    <<: *worker-template
+    container_name: spark-worker-1
+
+  spark-worker-2:
+    <<: *worker-template
+    container_name: spark-worker-2
