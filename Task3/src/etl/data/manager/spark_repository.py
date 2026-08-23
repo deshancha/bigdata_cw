@@ -40,4 +40,5 @@ class SparkRepository(IEtlManager):
         return count_df
  
     def sort_records(self, df: DataFrame, limit: int = 50) -> DataFrame:
-        pass
+        # get top 50 by sorting 
+        return df.orderBy("count", ascending=False).limit(limit)

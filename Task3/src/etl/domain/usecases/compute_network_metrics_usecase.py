@@ -14,12 +14,16 @@ class ComputeNetworkMetricsUseCase:
     def execute(self, file_path: str):
         self.logger.info("Starting ETL")
         
-        start_time = time.time()
         self.logger.info(f"Loading dataset from: {file_path}")
         raw_df = self.repository.load_data(file_path)
         self.logger.info("Dataset loaded!")
         
-        self.logger.info("cout incoming links")
+        self.logger.info("Counting incoming links")
         counted_df = self.repository.count_incoming_links(raw_df)
-        self.logger.info(f"cout {counted_df.count()}")
+        self.logger.info(f"Total unique count: {counted_df.count()}")
+        
+        self.logger.info("Top 50")
+        top_50_df = self.repository.sort_records(counted_df, limit=50)
+        
+        top_50_df.show(50)
        
