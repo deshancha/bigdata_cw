@@ -23,3 +23,16 @@ DIDIR=./di
 ```
 docker compose up -d
 ```
+
+## Execute job Locally 
+
+```
+pip install -r requirements.txt
+python src/main.py     
+```
+
+## execute job on spark cluster in docker 
+
+```
+docker exec -it spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077  /opt/spark/work-dir/src/main.py
+```
