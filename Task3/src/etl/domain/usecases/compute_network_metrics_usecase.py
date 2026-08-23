@@ -29,5 +29,5 @@ class ComputeNetworkMetricsUseCase:
         top_50_df.show(50)
         
         duration = time.time() - start_time
-        self.logger.info(f"Task took {duration:.1} secs")
+        self.logger.info(f"Task took {duration:.2f} secs")
        
