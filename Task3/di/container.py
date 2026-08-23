@@ -19,8 +19,8 @@ class DiContainer:
                        .getOrCreate())
         
         self._logger = Logger("Tsk3_Spark")
-        
-        self._repository = SparkRepository(self._spark)
+        # Initialize Repository
+        self._repository = SparkRepository(self._spark, self._logger)
         
         self._usecase = ComputeNetworkMetricsUseCase(self._repository, self._logger)
 
