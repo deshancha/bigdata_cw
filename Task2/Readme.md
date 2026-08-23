@@ -10,7 +10,7 @@ FLINK_VERSION=1.18.1
 
 # Kafka
 KAFKA_PORT=29092
-KAFKA_UI_PORT=8080
+KAFKA_UI_PORT=8089
 KAFKA_TOPIC=traffic-telemetry
 
 
@@ -35,8 +35,8 @@ source .venv/bin/activate
 ```
 
 ## docker compose up
-- Kafka UI - http://localhost:8081
-- Flink UI - http://localhost:8080
+- Kafka UI - http://localhost:8089
+- Flink UI - http://localhost:8081
 - InfluxDB UI - http://localhost:8087/
 
 ```

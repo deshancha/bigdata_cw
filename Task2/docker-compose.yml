@@ -76,7 +76,7 @@ services:
     image: kafbat/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "${KAFKA_UI_PORT}:${KAFKA_UI_PORT}"
+      - "${KAFKA_UI_PORT}:8080"
     networks:
       - network-label
     environment:
