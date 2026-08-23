@@ -17,3 +17,9 @@ DOCKERDIR=./data
 SRCDIR=./src
 DIDIR=./di
 ```
+
+## Docker 
+
+```
+docker compose up -d
+```
