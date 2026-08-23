@@ -17,6 +17,10 @@ def main():
     
     dataset_path = "/opt/spark/work-dir/data/web-BerkStan.txt"
     
+    # for local running, during dev only
+    if not os.path.exists(dataset_path):
+        dataset_path = os.path.join(os.path.dirname(__file__), "..", "data", "web-BerkStan.txt")
+    
     try:
         usecase.execute(dataset_path)
     except Exception as e:

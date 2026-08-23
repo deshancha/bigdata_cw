@@ -12,4 +12,10 @@ class ComputeNetworkMetricsUseCase:
         self.logger = logger
 
     def execute(self, file_path: str):
-        pass
+        self.logger.info("Starting ETL")
+        
+        self.logger.info(f"Loading dataset from: {file_path}")
+        raw_df = self.repository.load_data(file_path)
+        self.logger.info("Dataset loaded!")
+        
+        
