@@ -14,6 +14,7 @@ class ComputeNetworkMetricsUseCase:
     def execute(self, file_path: str):
         self.logger.info("Starting ETL")
         
+        start_time = time.time()
         self.logger.info(f"Loading dataset from: {file_path}")
         raw_df = self.repository.load_data(file_path)
         self.logger.info("Dataset loaded!")
@@ -26,4 +27,7 @@ class ComputeNetworkMetricsUseCase:
         top_50_df = self.repository.sort_records(counted_df, limit=50)
         
         top_50_df.show(50)
+        
+        duration = time.time() - start_time
+        self.logger.info(f"Task took {duration:.1} secs")
        
