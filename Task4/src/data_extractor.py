@@ -18,7 +18,6 @@ def extract_data(size: int = 5000):
     logger.info(f"Extracting :{size} ")
     count = 0
     with open(raw_file, "r") as infile, open(out_file, "w") as outfile:
-        outfile.write("FromNodeId,ToNodeId\n")
         
         for line in infile:
             # skip meta
