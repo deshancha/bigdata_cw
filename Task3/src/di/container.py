@@ -5,7 +5,7 @@ import sys
 import os
 
 # Ensure src directory is on python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pyspark.sql import SparkSession
 from core.util.logger import Logger
