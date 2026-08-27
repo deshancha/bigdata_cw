@@ -31,14 +31,18 @@ def main():
         csv_file_path = os.path.abspath(
             os.path.join(src_dir, "..", "Data", "weatherHistory.csv")
         )
-        load_usecase = container.load_data_usecase()
-        load_usecase.execute(csv_file_path=csv_file_path)
+        load_csv = container.load_csv_usecase()
+        records = load_csv.execute(csv_file_path=csv_file_path)
+        write_records = container.write_records_usecase()
+        write_records.execute(records=records)
     elif arg == "2":
         csv_file_path = os.path.abspath(
             os.path.join(src_dir, "..", "Data", "Project 1 - Weather Dataset.csv")
         )
-        load_usecase = container.load_data_usecase()
-        load_usecase.execute(csv_file_path=csv_file_path)
+        load_csv = container.load_csv_usecase()
+        records = load_csv.execute(csv_file_path=csv_file_path)
+        write_records = container.write_records_usecase()
+        write_records.execute(records=records)
 
     close_usecase = container.close_connection_usecase()
     close_usecase.execute()

@@ -5,7 +5,8 @@ from dependency_injector import containers, providers
 from core.util import LoggerFactory, ILogger
 from climate.domain.interfaces.iclimate_repository import IClimateRepository
 from climate.data.manager.influxdb_climate_repository_imp import InfluxDbClimateRepositoryImp
-from climate.domain.usecases.load_data_usecase import LoadDataUseCase
+from climate.domain.usecases.load_csv_usecase import LoadCsvUseCase
+from climate.domain.usecases.write_records_usecase import WriteRecordsUseCase
 from climate.domain.usecases.clear_data_usecase import ClearDataUseCase
 from climate.domain.usecases.close_connection_usecase import CloseConnectionUseCase
 from climate.domain.usecases.open_connection_usecase import OpenConnectionUseCase
@@ -29,8 +30,13 @@ class AppContainer(containers.DeclarativeContainer):
         logger=logger
     )
 
-    load_data_usecase = providers.Factory(
-        LoadDataUseCase,
+    load_csv_usecase = providers.Factory(
+        LoadCsvUseCase,
+        logger=logger
+    )
+
+    write_records_usecase = providers.Factory(
+        WriteRecordsUseCase,
         climate_repository=climate_repository,
         logger=logger
     )
