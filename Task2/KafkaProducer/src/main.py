@@ -17,7 +17,6 @@ def main():
 
     container = AppContainer()
     logger = container.logger()
-    repository = container.telemetry_repository()
     topic = os.getenv("KAFKA_TOPIC", "traffic-telemetry")
 
     logger.info("Traffic telemetry producer start")
@@ -26,7 +25,8 @@ def main():
     parse_usecase = container.parse_telemetry_usecase()
     send_usecase = container.send_telemetry_usecase()
 
-    repository.connect_producer()
+    connect_usecase = container.connect_producer_usecase()
+    connect_usecase.execute()
 
     fetched_records = fetch_usecase.execute()
 
@@ -48,7 +48,8 @@ def main():
     except Exception as e:
         logger.error(f"Err producing: {e}")
     finally:
-        repository.close_producer()
+        close_usecase = container.close_producer_usecase()
+        close_usecase.execute()
 
     logger.info("Producer Done!")
 

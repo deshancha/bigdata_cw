@@ -7,6 +7,8 @@ from telemetry.data.manager.kafka_telemetry_repository_imp import KafkaTelemetry
 from telemetry.domain.usecases.fetch_telemetry_usecase import FetchTelemetryUseCase
 from telemetry.domain.usecases.parse_telemetry_usecase import ParseTelemetryUseCase
 from telemetry.domain.usecases.send_telemetry_usecase import SendTelemetryUseCase
+from telemetry.domain.usecases.connect_producer_usecase import ConnectProducerUseCase
+from telemetry.domain.usecases.close_producer_usecase import CloseProducerUseCase
 
 class AppContainer(containers.DeclarativeContainer):
     """
@@ -37,6 +39,18 @@ class AppContainer(containers.DeclarativeContainer):
 
     send_telemetry_usecase = providers.Factory(
         SendTelemetryUseCase,
+        telemetry_repository=telemetry_repository,
+        logger=logger
+    )
+
+    connect_producer_usecase = providers.Factory(
+        ConnectProducerUseCase,
+        telemetry_repository=telemetry_repository,
+        logger=logger
+    )
+
+    close_producer_usecase = providers.Factory(
+        CloseProducerUseCase,
         telemetry_repository=telemetry_repository,
         logger=logger
     )

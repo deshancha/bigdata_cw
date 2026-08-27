@@ -22,6 +22,7 @@ INFLUXDB_MEASUREMENT_WEATHER=weather_data
 
 ```
 docker compose up -d
+http://localhost:8086/
 ```
 
 ## source 
