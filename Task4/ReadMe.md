@@ -38,7 +38,37 @@ MERGE (fromPatent)-[:REFS]->(toPatent);
 
 Find all patents that a patent referenced
 ```
-MATCH (patent:Patent {id: 3858243})-->(citedPatent:Patent)
-RETURN patent.id AS Patent_Id, citedPatent.id AS Cited_Patent_Id;
+MATCH (referencingPatent:Patent {id: 3858243})-->(referencedPatent:Patent)
+RETURN referencingPatent, referencedPatent;
 ```
 
+Top 5 most referenced patents (Top 5 has > 3 citations)
+```
+MATCH (referencing:Patent)-[:REFS]->(referenced:Patent)
+RETURN referenced.id AS Patent_Id, count(referencing) AS Reference_Cout
+ORDER BY Reference_Cout DESC
+LIMIT 5;
+```
+
+4 Hops 
+
+Find possibilities of 3 Refs ( 4 Hops)
+```
+MATCH p = (p1:Patent)-[:REFS*..3]-(p2:Patent)
+WHERE p1.id < p2.id AND p1.id <> p2.id
+// Ensure p1 and p2 have NO direct reference between them
+AND NOT EXISTS { (p1)-[:REFS]->(p2) }
+AND NOT EXISTS { (p2)-[:REFS]->(p1) }
+RETURN DISTINCT p1.id, p2.id, length(p) AS Hops
+ORDER BY Hops DESC
+LIMIT 10;
+```
+
+more than 4 it looks they have immediate refs
+
+NMow draw shortest path
+
+```
+MATCH p = shortestPath((p1:Patent {id: 1600859})-[:REFS*..6]-(p2:Patent {id: 3858245}))
+RETURN p;
+```
