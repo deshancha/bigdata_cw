@@ -1,0 +1,56 @@
+// Author: Chamika Deshan
+// Created: 2026-08-20
+
+package com.bigdata.cw.processor.telemetry.data.sink
+
+import com.influxdb.client.InfluxDBClient
+import com.influxdb.client.InfluxDBClientFactory
+import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.write.Point
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import org.apache.flink.configuration.Configuration
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction
+import org.apache.flink.streaming.api.functions.sink.SinkFunction
+import com.bigdata.cw.processor.core.util.ILogger
+import io.github.cdimascio.dotenv.Dotenv
+import java.time.Instant
+
+class FlinkInfluxDbSink(private val logger: ILogger) : RichSinkFunction<String>() {
+    private var client: InfluxDBClient? = null
+
+    override fun open(parameters: Configuration) {
+        val dotenv = Dotenv.configure().ignoreIfMissing().load()
+        val host = dotenv.get("INFLUXDB_DOCKER_HOST", "influxdb-label")
+        val port = dotenv.get("INFLUXDB_INTERNAL_PORT", "8086")
+        val url = "http://$host:$port"
+        val token = dotenv.get("INFLUXDB_TOKEN", "api-token")
+        val org = dotenv.get("INFLUXDB_ORG", "bigdata_cw")
+        val bucket = dotenv.get("INFLUXDB_BUCKET", "traffic_data")
+
+        client = InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket)
+    }
+
+    override fun invoke(value: String, context: SinkFunction.Context) {
+        try {
+            val json = Gson().fromJson(value, JsonObject::class.java)
+            val camId = json.get("cam_id")?.asString ?: "unknown"
+            val count = json.get("vehicle_count")?.asInt ?: 0
+            val windowStart = json.get("original_start")?.asLong ?: System.currentTimeMillis()
+
+            val point = Point.measurement("camera_traffic")
+                .addTag("cam_id", camId)
+                .addField("vehicle_count", count)
+                .time(Instant.ofEpochMilli(windowStart), WritePrecision.MS)
+
+            client?.writeApiBlocking?.writePoint(point)
+        } catch (e: Exception) {
+            logger.error("Fail to Write InfluxDB: ${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    override fun close() {
+        client?.close()
+    }
+}

@@ -1,0 +1,26 @@
+version: '3.8'
+
+networks:
+  neo4j-network:
+    name: task4-neo4j-network
+    driver: bridge
+
+services:
+  neo4j:
+    image: ${NEO4J_IMAGE}
+    container_name: task4-neo4j
+    ports:
+      - "${WEB_TRAFFIC_PORT}:7474"
+      - "${INTERNAL_BOLT_COMMUNICATION_PORT}:7687"
+    environment:
+      - NEO4J_AUTH=${NEO4J_AUTH}
+    volumes:
+      - ${DOCKERDIR}:/var/lib/neo4j/import
+      # persistance store, not affect by docker lifecycle, neo4j_data betetr than local storage because its faster
+      - neo4j_data:/data
+    networks:
+      - neo4j-network
+
+volumes:
+  # inside linux kernal
+  neo4j_data:
